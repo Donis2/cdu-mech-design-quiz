@@ -1,0 +1,351 @@
+import * as React from 'react'
+import {
+  Check,
+  X,
+  Star,
+  Eye,
+  Lightbulb,
+  BookmarkPlus,
+  BookmarkCheck,
+  ImageIcon,
+  Link2,
+} from 'lucide-react'
+import type { ProgressRecord, Question } from '@/lib/types'
+import { cn, imgUrl, isObjective, typeLabel } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { KatexBlock, KatexText } from '@/components/KatexText'
+import { judgeObjective } from '@/lib/quiz'
+import { recordAnswer, setWrongBook, toggleFavorite } from '@/lib/storage'
+
+const DIFF_VARIANT: Record<string, 'success' | 'warning' | 'destructive' | 'secondary'> = {
+  简单: 'success',
+  中等: 'warning',
+  较难: 'destructive',
+}
+
+export function QuestionCard({
+  question: q,
+  record,
+  onAnswered,
+}: {
+  question: Question
+  record?: ProgressRecord
+  onAnswered?: () => void
+}) {
+  const objective = isObjective(q.type)
+  const [selected, setSelected] = React.useState<string[]>([])
+  const [judged, setJudged] = React.useState(false)
+  const [revealed, setRevealed] = React.useState(false)
+
+  React.useEffect(() => {
+    setSelected([])
+    setJudged(false)
+    setRevealed(false)
+  }, [q.id])
+
+  const answerKeys = React.useMemo(() => {
+    if (q.type === 'true_false') return []
+    return (Array.isArray(q.answer) ? q.answer : [q.answer]) as string[]
+  }, [q])
+
+  const correct = React.useMemo(() => {
+    if (!judged) return null
+    return judgeObjective(q, selected)
+  }, [judged, q, selected])
+
+  function choose(key: string) {
+    if (judged) return
+    const next = q.type === 'multiple_choice' ? toggle(selected, key) : [key]
+    setSelected(next)
+    if (q.type === 'single_choice' || q.type === 'true_false') {
+      const ok = judgeObjective(q, next)
+      setJudged(true)
+      recordAnswer(q.id, next, ok)
+      onAnswered?.()
+    }
+  }
+
+  function submitMulti() {
+    if (!selected.length) return
+    const ok = judgeObjective(q, selected)
+    setJudged(true)
+    recordAnswer(q.id, selected, ok)
+    onAnswered?.()
+  }
+
+  function reveal() {
+    setRevealed(true)
+    onAnswered?.()
+  }
+
+  function selfJudge(ok: boolean) {
+    recordAnswer(q.id, null, ok)
+    onAnswered?.()
+  }
+
+  const showAnswerArea = objective ? judged || revealed : revealed
+  const answerText = React.useMemo(() => formatAnswer(q), [q])
+
+  return (
+    <div className="space-y-4">
+      {/* 题头 */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="default">{typeLabel(q.type)}</Badge>
+        {q.source_years.map((y) => (
+          <Badge key={y} variant="info">
+            {y}年
+          </Badge>
+        ))}
+        {q.difficulty && (
+          <Badge variant={DIFF_VARIANT[q.difficulty] ?? 'secondary'}>{q.difficulty}</Badge>
+        )}
+        {q.score ? <Badge variant="outline">{q.score} 分</Badge> : null}
+        {q.tags.map((t) => (
+          <Badge key={t} variant="purple">
+            {t}
+          </Badge>
+        ))}
+        <div className="ml-auto flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => toggleFavorite(q.id)}
+            title="收藏本题"
+          >
+            <Star
+              className={cn(
+                'h-4 w-4',
+                record?.favorite ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground',
+              )}
+            />
+          </Button>
+        </div>
+      </div>
+
+      {/* 题干 */}
+      <div className="text-[15px] leading-relaxed text-foreground">
+        <span className="mr-2 font-semibold text-primary">{q.id}</span>
+        <KatexText text={q.stem} />
+      </div>
+
+      {/* 题图 */}
+      {q.images.length > 0 && (
+        <div className="space-y-2">
+          {q.images.map((src) => (
+            <figure
+              key={src}
+              className="overflow-hidden rounded-md border bg-white p-1.5"
+            >
+              <img
+                src={imgUrl(src)}
+                alt={`${q.id} 题图`}
+                loading="lazy"
+                className="mx-auto max-h-[420px] w-auto object-contain"
+              />
+            </figure>
+          ))}
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <ImageIcon className="h-3 w-3" />
+            题目图形（原始扫描件裁切）
+          </p>
+        </div>
+      )}
+
+      {/* 选项 / 填空提示 */}
+      {q.options.length > 0 && (
+        <div className="space-y-2">
+          {q.options.map((opt) => {
+            const isSel = selected.includes(opt.key)
+            const isRight = answerKeys.includes(opt.key)
+            const state = !judged
+              ? isSel
+                ? 'selected'
+                : 'idle'
+              : isRight
+                ? 'right'
+                : isSel
+                  ? 'wrong'
+                  : 'idle'
+            return (
+              <button
+                key={opt.key}
+                onClick={() => choose(opt.key)}
+                disabled={judged}
+                className={cn(
+                  'flex w-full items-start gap-3 rounded-md border px-3.5 py-2.5 text-left text-sm transition-colors',
+                  state === 'idle' && 'hover:border-primary/50 hover:bg-accent',
+                  state === 'selected' && 'border-primary bg-primary/5',
+                  state === 'right' && 'border-emerald-400 bg-emerald-50',
+                  state === 'wrong' && 'border-rose-400 bg-rose-50',
+                  judged && 'cursor-default',
+                )}
+              >
+                <span
+                  className={cn(
+                    'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs font-semibold',
+                    state === 'idle' && 'border-muted-foreground/40 text-muted-foreground',
+                    state === 'selected' && 'border-primary bg-primary text-primary-foreground',
+                    state === 'right' && 'border-emerald-500 bg-emerald-500 text-white',
+                    state === 'wrong' && 'border-rose-500 bg-rose-500 text-white',
+                  )}
+                >
+                  {state === 'right' ? (
+                    <Check className="h-3 w-3" />
+                  ) : state === 'wrong' ? (
+                    <X className="h-3 w-3" />
+                  ) : (
+                    opt.key
+                  )}
+                </span>
+                <span className="flex-1">
+                  <KatexText text={opt.text} />
+                </span>
+              </button>
+            )
+          })}
+          {q.type === 'multiple_choice' && !judged && (
+            <Button size="sm" onClick={submitMulti} disabled={!selected.length}>
+              提交答案
+            </Button>
+          )}
+          {correct !== null && (
+            <p
+              className={cn(
+                'text-sm font-medium',
+                correct ? 'text-emerald-600' : 'text-rose-600',
+              )}
+            >
+              {correct ? '✓ 回答正确' : `✗ 回答错误，正确答案：${answerKeys.join('、')}`}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* 操作区：错题本按钮常驻；主观题额外提供「显示答案 / 自评」 */}
+      <div className="flex flex-wrap items-center gap-2">
+        {!objective &&
+          (!revealed ? (
+            <Button onClick={reveal}>
+              <Eye className="mr-1 h-4 w-4" /> 显示答案
+            </Button>
+          ) : (
+            <>
+              <span className="text-sm text-muted-foreground">自评：</span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                onClick={() => selfJudge(true)}
+              >
+                <Check className="mr-1 h-4 w-4" /> 我答对了
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-rose-300 text-rose-700 hover:bg-rose-50"
+                onClick={() => selfJudge(false)}
+              >
+                <X className="mr-1 h-4 w-4" /> 我答错了
+              </Button>
+            </>
+          ))}
+        <WrongBookButton questionId={q.id} record={record} />
+      </div>
+
+      {/* 答案与解析 */}
+      {showAnswerArea && (
+        <div className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
+          <div>
+            <div className="mb-1 flex items-center gap-1.5 text-sm font-semibold text-primary">
+              <Lightbulb className="h-4 w-4" /> 参考答案
+            </div>
+            <KatexBlock text={answerText} className="text-sm text-foreground" />
+          </div>
+
+          {q.answer_images?.length > 0 && (
+            <div className="space-y-2">
+              {q.answer_images.map((src) => (
+                <figure key={src} className="overflow-hidden rounded-md border bg-white p-1.5">
+                  <img
+                    src={imgUrl(src)}
+                    alt={`${q.id} 答案图`}
+                    loading="lazy"
+                    className="mx-auto max-h-[420px] w-auto object-contain"
+                  />
+                </figure>
+              ))}
+              <p className="text-xs text-muted-foreground">答案图形（原始扫描件裁切）</p>
+            </div>
+          )}
+
+          {q.explanation && (
+            <div className="border-t border-primary/15 pt-3">
+              <div className="mb-1 text-sm font-semibold text-primary">解析 / 考点</div>
+              <KatexBlock text={q.explanation} className="text-sm text-muted-foreground" />
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-1.5 border-t border-primary/15 pt-3">
+            {q.knowledge_points.map((kp) => (
+              <Badge key={kp} variant="secondary">
+                {kp}
+              </Badge>
+            ))}
+            {q.chapter && <Badge variant="outline">{q.chapter}</Badge>}
+          </div>
+
+          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Link2 className="h-3 w-3" />
+              题号来源：
+              {Object.entries(q.original_numbers)
+                .map(([y, n]) => `${y}年 ${n}`)
+                .join('；')}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function WrongBookButton({
+  questionId,
+  record,
+}: {
+  questionId: string
+  record?: ProgressRecord
+}) {
+  const inBook = record?.inWrongBook ?? false
+  return (
+    <Button
+      size="sm"
+      variant={inBook ? 'secondary' : 'outline'}
+      onClick={() => setWrongBook(questionId, !inBook)}
+    >
+      {inBook ? (
+        <>
+          <BookmarkCheck className="mr-1 h-4 w-4 text-rose-500" /> 已加入错题本（点击移除）
+        </>
+      ) : (
+        <>
+          <BookmarkPlus className="mr-1 h-4 w-4" /> 加入错题本
+        </>
+      )}
+    </Button>
+  )
+}
+
+function toggle(arr: string[], v: string) {
+  return arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
+}
+
+function formatAnswer(q: Question): string {
+  if (q.type === 'true_false') {
+    const a = Array.isArray(q.answer) ? q.answer[0] : q.answer
+    return a ? '正确' : '错误'
+  }
+  if (Array.isArray(q.answer)) return (q.answer as string[]).join('\n')
+  return String(q.answer)
+}

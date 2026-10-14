@@ -1,0 +1,804 @@
+{
+  "subject": "855 机械设计基础",
+  "school": "常州大学",
+  "outline_source": "常州大学考试大纲.docx（2026年硕士研究生自命题科目考试大纲）",
+  "exam": {
+    "duration_minutes": 180,
+    "total_score": 150,
+    "question_types": [
+      "选择题",
+      "简答题",
+      "综合题"
+    ],
+    "calculator_allowed": false,
+    "references": [
+      "《机械设计基础》杨可桢、程光蕴主编，高等教育出版社，2020年第七版",
+      "《机械设计》濮良贵、陈国定主编，高等教育出版社，2019年第十版",
+      "《机械原理》郑文伟、吴志坚主编，高等教育出版社，1997年第六版"
+    ]
+  },
+  "chapters": [
+    {
+      "id": "ch0",
+      "name": "绪论",
+      "points": [
+        {
+          "id": "kp-jielun-1",
+          "name": "本课程的研究对象（机械、机器、机构）",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-jielun-2",
+          "name": "机械设计的基本要求和一般过程",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 0
+    },
+    {
+      "id": "ch1",
+      "name": "第一章 平面机构的自由度和速度分析",
+      "points": [
+        {
+          "id": "kp-ch1-1",
+          "name": "平面运动副及其分类",
+          "questionCount": 1,
+          "questionIds": [
+            "2023-选择-01"
+          ]
+        },
+        {
+          "id": "kp-ch1-2",
+          "name": "平面机构运动简图",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch1-3",
+          "name": "平面机构的自由度",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-计算-01",
+            "2024-计算-01",
+            "2025-计算-01"
+          ]
+        },
+        {
+          "id": "kp-ch1-4",
+          "name": "速度瞬心及其在机构速度分析上的应用",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 4
+    },
+    {
+      "id": "ch2",
+      "name": "第二章 平面连杆机构",
+      "points": [
+        {
+          "id": "kp-ch2-1",
+          "name": "平面连杆机构的基本类型及其应用",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-01"
+          ]
+        },
+        {
+          "id": "kp-ch2-2",
+          "name": "平面四杆机构的基本特性",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-简答-01",
+            "2024-选择-07"
+          ]
+        },
+        {
+          "id": "kp-ch2-3",
+          "name": "平面四杆机构的设计",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 3
+    },
+    {
+      "id": "ch3",
+      "name": "第三章 凸轮机构",
+      "points": [
+        {
+          "id": "kp-ch3-1",
+          "name": "凸轮机构的应用和分类",
+          "questionCount": 1,
+          "questionIds": [
+            "2023-选择-02"
+          ]
+        },
+        {
+          "id": "kp-ch3-2",
+          "name": "从动件常用运动规律",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-选择-02",
+            "2024-选择-03"
+          ]
+        },
+        {
+          "id": "kp-ch3-3",
+          "name": "凸轮机构的压力角",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch3-4",
+          "name": "图解法设计凸轮轮廓",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 3
+    },
+    {
+      "id": "ch4",
+      "name": "第四章 齿轮机构",
+      "points": [
+        {
+          "id": "kp-ch4-1",
+          "name": "齿轮机构的应用和类型",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch4-2",
+          "name": "齿廓实现定角速比传动的条件",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch4-3",
+          "name": "渐开线齿廓及其性质",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-选择-04"
+          ]
+        },
+        {
+          "id": "kp-ch4-4",
+          "name": "渐开线标准直齿圆柱齿轮的基本参数和几何尺寸",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-计算-06"
+          ]
+        },
+        {
+          "id": "kp-ch4-5",
+          "name": "渐开线标准圆柱齿轮传动的啮合",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch4-6",
+          "name": "渐开线齿轮的切齿原理",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch4-7",
+          "name": "根切、最少齿数及其变位齿轮",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch4-8",
+          "name": "平行轴斜齿轮机构",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-选择-03",
+            "2022-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch4-9",
+          "name": "锥齿轮机构",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 4
+    },
+    {
+      "id": "ch5",
+      "name": "第五章 轮系",
+      "points": [
+        {
+          "id": "kp-ch5-1",
+          "name": "轮系的分类",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch5-2",
+          "name": "定轴轮系及其传动比",
+          "questionCount": 1,
+          "questionIds": [
+            "2025-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch5-3",
+          "name": "周转轮系及其传动比",
+          "questionCount": 2,
+          "questionIds": [
+            "2024-计算-07",
+            "2025-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch5-4",
+          "name": "复合轮系及其传动比",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-计算-03",
+            "2023-计算-03",
+            "2025-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch5-5",
+          "name": "轮系的应用",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 4
+    },
+    {
+      "id": "ch7",
+      "name": "第七章 机器的运转速度波动的调节",
+      "points": [
+        {
+          "id": "kp-ch7-1",
+          "name": "机器运转速度波动调节的目的和方法",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch7-2",
+          "name": "飞轮设计的近似方法",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-04"
+          ]
+        }
+      ],
+      "questionCount": 1
+    },
+    {
+      "id": "ch8",
+      "name": "第八章 回转件的平衡",
+      "points": [
+        {
+          "id": "kp-ch8-1",
+          "name": "平衡的目的与分类",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch8-2",
+          "name": "刚性回转件的平衡（静平衡、动平衡）",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-简答-04",
+            "2024-计算-02",
+            "2025-简答-03"
+          ]
+        }
+      ],
+      "questionCount": 3
+    },
+    {
+      "id": "ch9",
+      "name": "第九章 机械零件设计概论",
+      "points": [
+        {
+          "id": "kp-ch9-1",
+          "name": "机械设计的基本要求及设计顺序",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch9-2",
+          "name": "机械零件的强度、接触强度、耐磨性",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch9-3",
+          "name": "机械零件常用的材料及其选择",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch9-4",
+          "name": "机械零件的工艺性及其标准化",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 0
+    },
+    {
+      "id": "ch10",
+      "name": "第十章 连接",
+      "points": [
+        {
+          "id": "kp-ch10-1",
+          "name": "螺纹参数",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch10-2",
+          "name": "螺纹副的受力分析、效率和自锁",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-选择-02"
+          ]
+        },
+        {
+          "id": "kp-ch10-3",
+          "name": "机械制造常用的螺纹",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch10-4",
+          "name": "螺纹连接的基本类型及紧固件",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-简答-05",
+            "2024-简答-03"
+          ]
+        },
+        {
+          "id": "kp-ch10-5",
+          "name": "螺纹连接的预紧与防松",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-05"
+          ]
+        },
+        {
+          "id": "kp-ch10-6",
+          "name": "螺纹连接的强度计算",
+          "questionCount": 5,
+          "questionIds": [
+            "2022-计算-04",
+            "2024-选择-05",
+            "2024-计算-04",
+            "2025-计算-03",
+            "2025-计算-04"
+          ]
+        },
+        {
+          "id": "kp-ch10-7",
+          "name": "螺栓的材料和许用应力",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch10-8",
+          "name": "提高螺栓连接强度的措施",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch10-9",
+          "name": "螺旋传动",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch10-10",
+          "name": "键连接和花键连接",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-06"
+          ]
+        },
+        {
+          "id": "kp-ch10-11",
+          "name": "销连接",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 10
+    },
+    {
+      "id": "ch11",
+      "name": "第十一章 齿轮传动",
+      "points": [
+        {
+          "id": "kp-ch11-1",
+          "name": "齿轮传动的主要失效形式和设计计算准则",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-简答-03"
+          ]
+        },
+        {
+          "id": "kp-ch11-2",
+          "name": "齿轮材料及热处理，配对齿轮的硬度差",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch11-3",
+          "name": "齿轮传动的精度",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch11-4",
+          "name": "标准直齿圆柱齿轮的受力分析",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch11-5",
+          "name": "齿根弯曲和齿面接触疲劳强度计算",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-08"
+          ]
+        },
+        {
+          "id": "kp-ch11-6",
+          "name": "圆柱齿轮材料和参数的选取与计算方法",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch11-7",
+          "name": "斜齿圆柱齿轮传动",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-计算-05",
+            "2024-计算-05",
+            "2025-综合-01"
+          ]
+        },
+        {
+          "id": "kp-ch11-8",
+          "name": "直齿圆锥齿轮传动",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-计算-05",
+            "2024-计算-05",
+            "2025-综合-01"
+          ]
+        },
+        {
+          "id": "kp-ch11-9",
+          "name": "齿轮的构造",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch11-10",
+          "name": "齿轮传动润滑和效率",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 5
+    },
+    {
+      "id": "ch12",
+      "name": "第十二章 蜗杆传动",
+      "points": [
+        {
+          "id": "kp-ch12-1",
+          "name": "蜗杆传动的类型、特点",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch12-2",
+          "name": "蜗杆传动的几何尺寸、主要参数",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-选择-09",
+            "2023-简答-02"
+          ]
+        },
+        {
+          "id": "kp-ch12-3",
+          "name": "普通圆柱蜗杆传动的失效形式、材料和结构",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch12-4",
+          "name": "圆柱蜗杆传动的受力分析",
+          "questionCount": 2,
+          "questionIds": [
+            "2024-计算-05",
+            "2025-综合-01"
+          ]
+        },
+        {
+          "id": "kp-ch12-5",
+          "name": "圆柱蜗杆传动的强度计算",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch12-6",
+          "name": "圆柱蜗杆传动的效率、润滑与热平衡计算",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 2
+    },
+    {
+      "id": "ch13",
+      "name": "第十三章 带传动和链传动",
+      "points": [
+        {
+          "id": "kp-ch13-1",
+          "name": "带传动的基本类型与应用",
+          "questionCount": 2,
+          "questionIds": [
+            "2023-简答-01",
+            "2023-简答-03"
+          ]
+        },
+        {
+          "id": "kp-ch13-2",
+          "name": "带传动的受力分析",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-简答-02",
+            "2024-选择-06"
+          ]
+        },
+        {
+          "id": "kp-ch13-3",
+          "name": "带的应力分析",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch13-4",
+          "name": "带传动弹性滑动、传动比和打滑现象",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-简答-01"
+          ]
+        },
+        {
+          "id": "kp-ch13-5",
+          "name": "V带传动的计算",
+          "questionCount": 1,
+          "questionIds": [
+            "2022-选择-07"
+          ]
+        },
+        {
+          "id": "kp-ch13-6",
+          "name": "V带轮结构",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-选择-06"
+          ]
+        },
+        {
+          "id": "kp-ch13-7",
+          "name": "链传动的特点与应用",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 6
+    },
+    {
+      "id": "ch14",
+      "name": "第十四章 轴",
+      "points": [
+        {
+          "id": "kp-ch14-1",
+          "name": "轴的类型与应用",
+          "questionCount": 1,
+          "questionIds": [
+            "2024-选择-01"
+          ]
+        },
+        {
+          "id": "kp-ch14-2",
+          "name": "轴的材料",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch14-3",
+          "name": "轴的结构设计",
+          "questionCount": 3,
+          "questionIds": [
+            "2022-计算-07",
+            "2024-计算-03",
+            "2025-综合-02"
+          ]
+        },
+        {
+          "id": "kp-ch14-4",
+          "name": "轴的强度计算",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 3
+    },
+    {
+      "id": "ch15",
+      "name": "第十五章 滑动轴承",
+      "points": [
+        {
+          "id": "kp-ch15-1",
+          "name": "摩擦状态",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch15-2",
+          "name": "滑动轴承的结构形式",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch15-3",
+          "name": "轴瓦及轴承衬材料",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch15-4",
+          "name": "润滑剂和润滑装置",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch15-5",
+          "name": "非液体摩擦滑动轴承的设计计算",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch15-6",
+          "name": "动压润滑的基本原理",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-选择-10",
+            "2024-简答-02"
+          ]
+        },
+        {
+          "id": "kp-ch15-7",
+          "name": "向心动压滑动轴承承载能力的计算",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 2
+    },
+    {
+      "id": "ch16",
+      "name": "第十六章 滚动轴承",
+      "points": [
+        {
+          "id": "kp-ch16-1",
+          "name": "滚动轴承的基本类型和特点",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch16-2",
+          "name": "滚动轴承的代号",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch16-3",
+          "name": "滚动轴承的选择计算",
+          "questionCount": 2,
+          "questionIds": [
+            "2022-计算-06",
+            "2023-计算-02"
+          ]
+        },
+        {
+          "id": "kp-ch16-4",
+          "name": "滚动轴承的润滑与密封",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch16-5",
+          "name": "滚动轴承组合结构设计",
+          "questionCount": 2,
+          "questionIds": [
+            "2024-计算-03",
+            "2025-综合-02"
+          ]
+        }
+      ],
+      "questionCount": 3
+    },
+    {
+      "id": "ch17",
+      "name": "第十七章 联轴器、离合器与制动器",
+      "points": [
+        {
+          "id": "kp-ch17-1",
+          "name": "联轴器的类型和应用",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch17-2",
+          "name": "离合器的分类和特点",
+          "questionCount": 0,
+          "questionIds": []
+        },
+        {
+          "id": "kp-ch17-3",
+          "name": "制动器的类型和特点",
+          "questionCount": 0,
+          "questionIds": []
+        }
+      ],
+      "questionCount": 0
+    }
+  ],
+  "generated_from": [
+    {
+      "year": 2022,
+      "source": "2022年855机械设计基础真题",
+      "paper_file": "真题/常大2022年真题.pdf",
+      "answer_file": "真题答案/2022年答案.pdf",
+      "note": "试卷原件为扫描版（打印版试题，非回忆版），经逐页图像识别整理。卷面题型与分值：一、选择题（10题×2分=20分）；二、简答题（5题×5分=25分）；三~九、计算与综合题（14+15+15+15+15+15+16=105分），满分150分。随卷答案为手写扫描件：选择题答案（1-5.ABCAA，6-10.BABDD）经逐题与教材核对无误；计算题三、四、五、六、七、九有手写解答，已识别并按机械设计基础知识修正了其中的错误（详见各题解析与 report.md）；计算题八手写答案未给出解答（标注「考研指导书P202 3」），其解答为按教材方法补做；简答题1~5手写答案未收录，答案为按教材（杨可桢《机械设计基础》、濮良贵《机械设计》）编写的参考答案。",
+      "count": 22
+    },
+    {
+      "year": 2023,
+      "source": "2023年855机械设计基础真题",
+      "paper_file": "真题/常大2023年真题.pdf",
+      "answer_file": "真题答案/2023年答案.pdf",
+      "note": "试卷原件为扫描版，经逐页图像识别整理。卷面标注为「(A卷)回忆版」，并注明「2023届考研开始，常大不公开初试真题，只回忆到部分题目」：计算题第1题未回忆出（缺失），已回忆出的计算题保留卷面原始题号（第2、3题）。卷面题型与分值：选择题20分、简答题30分、计算题100分；选择题每题10分、简答题每题10分按卷面总分均摊，计算题分值卷面未标注，按100/3≈33分估计（分值为估计值）。",
+      "count": 7
+    },
+    {
+      "year": 2024,
+      "source": "2024年855机械设计基础真题",
+      "paper_file": "真题/常大2024年真题.pdf",
+      "answer_file": "真题答案/2024年答案.pdf",
+      "note": "试卷原件为扫描版，经逐页图像识别整理。卷面标注为「(A卷)回忆版」。",
+      "count": 17
+    },
+    {
+      "year": 2025,
+      "source": "2025年855机械设计基础真题",
+      "paper_file": "真题/常大2025年真题.pdf",
+      "answer_file": "真题答案/2025年答案.pdf",
+      "note": "试卷原件为扫描版，经逐页图像识别整理。卷面标注为「(A卷)回忆版」；据卷首说明，2025 届未考选择题（仅简答题、综合题、计算题）。本文档仅收录卷面出现的题目；与 2024 年重复的简答题已合并到 2024 年文件中记录（source_years 含 2025）。",
+      "count": 7
+    }
+  ],
+  "total_questions": 53
+}

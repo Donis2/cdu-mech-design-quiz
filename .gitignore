@@ -1,0 +1,17 @@
+# 依赖与构建产物
+node_modules/
+dist/
+.vite/
+.netlify/
+
+# 本地/工具缓存
+.workbuddy/
+__pycache__/
+*.pyc
+*.log
+
+# 环境与编辑器
+.env
+.env.local
+.DS_Store
+Thumbs.db
