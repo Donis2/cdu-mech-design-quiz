@@ -22,7 +22,7 @@ goto :push
 :has_changes
 echo [1/3] 检测到以下改动：
 echo.
-git status --short
+git -c core.quotepath=false status --short
 echo.
 set "MSG="
 set /p "MSG=请输入本次提交说明，直接回车则使用默认说明： "
