@@ -44,14 +44,14 @@ export function QuestionCard({
   const [judged, setJudged] = React.useState(false)
   const [revealed, setRevealed] = React.useState(false)
 
+  // 展开状态在「全显示」模式下由上层 forceReveal 双向受控；未受控时由用户手动切换
   React.useEffect(() => {
-    if (forceReveal) setRevealed(true)
+    setRevealed(forceReveal ?? false)
   }, [forceReveal, q.id])
 
   React.useEffect(() => {
     setSelected([])
     setJudged(false)
-    setRevealed(false)
   }, [q.id])
 
   const answerKeys = React.useMemo(() => {
@@ -156,7 +156,7 @@ export function QuestionCard({
                 src={imgUrl(src)}
                 alt={`${q.id} 题图`}
                 loading="lazy"
-                className="mx-auto max-h-[420px] w-auto object-contain"
+                className="mx-auto max-h-[50vh] w-auto object-contain sm:max-h-[420px]"
               />
             </figure>
           ))}
@@ -286,7 +286,7 @@ export function QuestionCard({
                     src={imgUrl(src)}
                     alt={`${q.id} 答案图`}
                     loading="lazy"
-                    className="mx-auto max-h-[420px] w-auto object-contain"
+                    className="mx-auto max-h-[50vh] w-auto object-contain sm:max-h-[420px]"
                   />
                 </figure>
               ))}

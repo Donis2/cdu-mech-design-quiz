@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Shuffle, ListOrdered, Sparkles, Star, AlertCircle, Layers, Square, Eye, EyeOff, ArrowUp } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Shuffle, ListOrdered, Sparkles, Star, AlertCircle, Layers, Square, Eye, EyeOff, ArrowUp, X, SlidersHorizontal } from 'lucide-react'
 import { questions } from '@/lib/data'
 import { filterQuestions, modeLabel } from '@/lib/quiz'
 import {
@@ -22,6 +22,7 @@ export function Practice() {
   const progress = useProgress()
   const [params, setParams] = useSearchParams()
   const [session, setSession] = React.useState<SessionState>(() => loadSession())
+  const [drawerOpen, setDrawerOpen] = React.useState(false)
   const appliedRef = React.useRef(false)
 
   // 从首页入口跳转时带上筛选参数
@@ -87,15 +88,30 @@ export function Practice() {
     }
   }
 
+  // 手机筛选抽屉：打开时锁住背景滚动，支持 Esc 关闭
+  React.useEffect(() => {
+    if (!drawerOpen) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [drawerOpen])
+
   return (
-    <div className="space-y-4">
-      {/* 顶部模式条 */}
-      <div className="sticky top-14 z-20 -mx-4 border-b bg-background/95 px-4 py-2.5 backdrop-blur">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="default" className="text-xs">
+    <div className={cn('space-y-4', !isAll && 'pb-24 lg:pb-0')}>
+      {/* 顶部模式条：第一行状态 + 视图切换，第二行可横向滚动的快捷按钮 */}
+      <div className="sticky top-14 z-20 -mx-3 border-b bg-background/95 px-3 py-2 backdrop-blur sm:-mx-4 sm:px-4">
+        <div className="flex items-center gap-2">
+          <Badge variant="default" className="shrink-0 text-xs">
             {modeLabel(session)}
           </Badge>
-          <span className="text-sm text-muted-foreground">
+          <span className="shrink-0 text-sm text-muted-foreground">
             {isAll ? (
               <>
                 共 <span className="font-semibold text-foreground tabular-nums">{list.length}</span> 题（全部展开）
@@ -111,43 +127,76 @@ export function Practice() {
             )}
           </span>
 
-          <div className="ml-2 flex flex-wrap items-center gap-1.5">
-            <Preset
-              icon={<ListOrdered className="h-3.5 w-3.5" />}
-              label="顺序练习"
-              active={!session.order || (session.order === 'order' && !session.wrongOnly && !session.favoriteOnly)}
-              onClick={() =>
-                patch({ ...defaultSession, order: 'order', index: 0, view: session.view })
-              }
-            />
-            <Preset
-              icon={<Shuffle className="h-3.5 w-3.5" />}
-              label="随机练习"
-              active={session.order === 'random'}
-              onClick={() => patch({ order: 'random', index: 0 })}
-            />
-            <Preset
-              icon={<AlertCircle className="h-3.5 w-3.5" />}
-              label="错题重做"
-              active={session.wrongOnly}
-              onClick={() => patch({ wrongOnly: true, favoriteOnly: false, index: 0 })}
-            />
-            <Preset
-              icon={<Star className="h-3.5 w-3.5" />}
-              label="我的收藏"
-              active={session.favoriteOnly}
-              onClick={() => patch({ favoriteOnly: true, wrongOnly: false, index: 0 })}
-            />
-            <Preset
-              icon={<Sparkles className="h-3.5 w-3.5" />}
-              label="按题型"
-              active={session.typeFilter.length > 0}
-              onClick={() => patch({ typeFilter: ['single_choice'], index: 0 })}
-            />
-          </div>
+          {/* 手机：打开筛选抽屉 */}
+          <button
+            onClick={() => setDrawerOpen(true)}
+            aria-expanded={drawerOpen}
+            aria-label="打开筛选"
+            className="ml-auto flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:bg-accent lg:hidden"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" /> 筛选
+            {(session.yearFilter.length + session.typeFilter.length + session.kpFilter.length) > 0 && (
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                {session.yearFilter.length + session.typeFilter.length + session.kpFilter.length}
+              </span>
+            )}
+          </button>
+
+          {/* 桌面：上一题 / 下一题 */}
+          {!isAll && (
+            <div className="ml-auto hidden items-center gap-1 lg:flex">
+              <Button variant="outline" size="sm" onClick={() => jump(index - 1)} disabled={index <= 0}>
+                <ChevronLeft className="mr-0.5 h-4 w-4" /> 上一题
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => jump(index + 1)}
+                disabled={index >= list.length - 1}
+              >
+                下一题 <ChevronRight className="ml-0.5 h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* 第二行：快捷按钮，手机/窄屏横向滚动，桌面自动换行 */}
+        <div className="mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible">
+          <Preset
+            icon={<ListOrdered className="h-3.5 w-3.5" />}
+            label="顺序练习"
+            active={!session.order || (session.order === 'order' && !session.wrongOnly && !session.favoriteOnly)}
+            onClick={() =>
+              patch({ ...defaultSession, order: 'order', index: 0, view: session.view })
+            }
+          />
+          <Preset
+            icon={<Shuffle className="h-3.5 w-3.5" />}
+            label="随机练习"
+            active={session.order === 'random'}
+            onClick={() => patch({ order: 'random', index: 0 })}
+          />
+          <Preset
+            icon={<AlertCircle className="h-3.5 w-3.5" />}
+            label="错题重做"
+            active={session.wrongOnly}
+            onClick={() => patch({ wrongOnly: true, favoriteOnly: false, index: 0 })}
+          />
+          <Preset
+            icon={<Star className="h-3.5 w-3.5" />}
+            label="我的收藏"
+            active={session.favoriteOnly}
+            onClick={() => patch({ favoriteOnly: true, wrongOnly: false, index: 0 })}
+          />
+          <Preset
+            icon={<Sparkles className="h-3.5 w-3.5" />}
+            label="按题型"
+            active={session.typeFilter.length > 0}
+            onClick={() => patch({ typeFilter: ['single_choice'], index: 0 })}
+          />
 
           {/* 显示方式切换 */}
-          <div className="ml-1 flex items-center gap-1 rounded-full border p-0.5">
+          <div className="flex shrink-0 items-center gap-1 rounded-full border p-0.5">
             <button
               onClick={() => patch({ view: 'single', revealAll: false })}
               className={cn(
@@ -174,7 +223,7 @@ export function Practice() {
             <button
               onClick={() => patch({ revealAll: !session.revealAll })}
               className={cn(
-                'flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors',
+                'flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors',
                 session.revealAll
                   ? 'border-primary bg-primary/10 font-medium text-primary'
                   : 'text-muted-foreground hover:border-primary/40 hover:bg-accent',
@@ -191,35 +240,48 @@ export function Practice() {
               )}
             </button>
           )}
-
-          <div className="ml-auto flex items-center gap-1">
-            {!isAll && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => jump(index - 1)}
-                  disabled={index <= 0}
-                >
-                  <ChevronLeft className="mr-0.5 h-4 w-4" /> 上一题
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => jump(index + 1)}
-                  disabled={index >= list.length - 1}
-                >
-                  下一题 <ChevronRight className="ml-0.5 h-4 w-4" />
-                </Button>
-              </>
-            )}
-          </div>
         </div>
       </div>
 
+      {/* 手机：筛选抽屉 */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="筛选条件">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setDrawerOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-y-0 left-0 flex w-[88%] max-w-sm flex-col bg-background shadow-xl">
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <span className="text-sm font-semibold">筛选条件</span>
+              <button
+                onClick={() => setDrawerOpen(false)}
+                aria-label="关闭筛选"
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-accent"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-3">
+              <FilterSidebar
+                session={session}
+                patch={patch}
+                progress={progress}
+                onReset={() => patch({ ...defaultSession, view: session.view })}
+              />
+            </div>
+            <div className="border-t p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+              <Button className="w-full" onClick={() => setDrawerOpen(false)}>
+                查看 {list.length} 题
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-        {/* 左：筛选 */}
-        <aside className="order-2 lg:order-1">
+        {/* 左：筛选（桌面侧栏；手机走抽屉） */}
+        <aside className="hidden lg:order-1 lg:block">
           <FilterSidebar
             session={session}
             patch={patch}
@@ -238,7 +300,7 @@ export function Practice() {
                     key={q.id}
                     id={`q-${q.id}`}
                     className={cn(
-                      'scroll-mt-28 rounded-lg border bg-card p-5 shadow-sm transition-shadow',
+                      'scroll-mt-32 rounded-lg border bg-card p-4 shadow-sm transition-shadow sm:scroll-mt-28 sm:p-5',
                       i === index && 'ring-2 ring-primary/40',
                     )}
                   >
@@ -266,7 +328,7 @@ export function Practice() {
             )
           ) : current ? (
             <>
-              <div className="rounded-lg border bg-card p-5 shadow-sm">
+              <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-5">
                 <QuestionCard
                   key={current.id}
                   question={current}
@@ -275,7 +337,7 @@ export function Practice() {
               </div>
 
               {list.length > 1 && (
-                <div className="mt-3 flex items-center justify-between">
+                <div className="mt-3 hidden items-center justify-between lg:flex">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -304,8 +366,8 @@ export function Practice() {
           )}
         </section>
 
-        {/* 右：答题卡 + 统计 */}
-        <aside className="order-3 space-y-3">
+        {/* 右：答题卡 + 统计（手机上排在题目下方） */}
+        <aside className="order-2 space-y-3 lg:order-3">
           <AnswerSheet
             list={list}
             currentIndex={index}
@@ -321,6 +383,33 @@ export function Practice() {
           />
         </aside>
       </div>
+
+      {/* 手机：底部翻页条 */}
+      {!isAll && current && list.length > 1 && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur lg:hidden">
+          <div className="mx-auto flex max-w-lg items-center gap-2">
+            <Button
+              variant="outline"
+              className="h-10 flex-1"
+              onClick={() => jump(index - 1)}
+              disabled={index <= 0}
+            >
+              <ChevronLeft className="mr-0.5 h-4 w-4" /> 上一题
+            </Button>
+            <span className="shrink-0 px-1 text-xs tabular-nums text-muted-foreground">
+              {index + 1}/{list.length}
+            </span>
+            <Button
+              variant="outline"
+              className="h-10 flex-1"
+              onClick={() => jump(index + 1)}
+              disabled={index >= list.length - 1}
+            >
+              下一题 <ChevronRight className="ml-0.5 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -363,7 +452,7 @@ function Preset({
     <button
       onClick={onClick}
       className={cn(
-        'flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors',
+        'flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors',
         active
           ? 'border-primary bg-primary/10 font-medium text-primary'
           : 'text-muted-foreground hover:border-primary/40 hover:bg-accent',

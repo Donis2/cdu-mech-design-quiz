@@ -43,7 +43,8 @@ export function KatexText({
           return renderKatex(part.slice(2, -2), true)
         }
         if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
-          return renderKatex(part.slice(1, -1), false)
+          // 包一层横向滚动容器：窄屏长公式不撑破布局
+          return `<span class="katex-inline-scroll">${renderKatex(part.slice(1, -1), false)}</span>`
         }
         return escapeHtml(part).replace(/\n/g, '<br/>')
       })

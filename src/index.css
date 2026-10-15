@@ -47,6 +47,15 @@
   overflow-y: hidden;
   padding: 2px 0;
 }
+/* 行内公式：窄屏（手机）横向滚动，避免长分式撑破容器 */
+.katex-inline-scroll {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: bottom;
+  -webkit-overflow-scrolling: touch;
+}
 
 /* 滚动条 */
 ::-webkit-scrollbar {

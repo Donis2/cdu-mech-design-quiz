@@ -131,8 +131,8 @@ export function Stats() {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={78}
-                    innerRadius={40}
+                    outerRadius="68%"
+                    innerRadius="34%"
                     paddingAngle={2}
                     label={({ name, value }) => `${name} ${value}`}
                     labelLine={false}
@@ -253,7 +253,7 @@ export function Stats() {
         <ChartCard title="计算题题型统计" desc="按解题套路归类">
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={calcShape} outerRadius={100}>
+              <RadarChart data={calcShape} outerRadius="70%">
                 <PolarGrid stroke="#e5e7eb" />
                 <PolarAngleAxis dataKey="shape" tick={{ fontSize: 11 }} />
                 <Radar
