@@ -125,6 +125,10 @@ export interface SessionState {
   favoriteOnly: boolean
   order: 'order' | 'random'
   index: number
+  /** 显示方式：single = 一题一题；all = 全部展开 */
+  view: 'single' | 'all'
+  /** 全部展开模式下是否默认展开答案 */
+  revealAll: boolean
 }
 
 export const defaultSession: SessionState = {
@@ -136,6 +140,8 @@ export const defaultSession: SessionState = {
   favoriteOnly: false,
   order: 'order',
   index: 0,
+  view: 'single',
+  revealAll: false,
 }
 
 export function loadSession(): SessionState {

@@ -28,15 +28,25 @@ export function QuestionCard({
   question: q,
   record,
   onAnswered,
+  index,
+  forceReveal,
 }: {
   question: Question
   record?: ProgressRecord
   onAnswered?: () => void
+  /** 在「全部展开」模式下的序号（从 0 开始） */
+  index?: number
+  /** 「全部展开」模式下由上层统一控制是否直接显示答案 */
+  forceReveal?: boolean
 }) {
   const objective = isObjective(q.type)
   const [selected, setSelected] = React.useState<string[]>([])
   const [judged, setJudged] = React.useState(false)
   const [revealed, setRevealed] = React.useState(false)
+
+  React.useEffect(() => {
+    if (forceReveal) setRevealed(true)
+  }, [forceReveal, q.id])
 
   React.useEffect(() => {
     setSelected([])
@@ -92,6 +102,11 @@ export function QuestionCard({
       {/* 题头 */}
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant="default">{typeLabel(q.type)}</Badge>
+        {index !== undefined && (
+          <Badge variant="outline" className="tabular-nums">
+            第 {index + 1} 题
+          </Badge>
+        )}
         {q.source_years.map((y) => (
           <Badge key={y} variant="info">
             {y}年
