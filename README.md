@@ -66,6 +66,7 @@ npm run preview
 ├─ 真题/  真题答案/              # 原始 PDF（扫描件）
 ├─ 常州大学考试大纲.docx
 ├─ 一键启动.bat                  # Windows 一键启动（安装依赖+构建数据+启动服务）
+├─ 一键推送.bat                  # Windows 一键提交并推送到 GitHub
 ├─ README.md
 └─ report.md                    # 解析校验报告 & 待确认清单
 ```
