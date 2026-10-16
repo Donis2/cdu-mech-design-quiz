@@ -169,8 +169,17 @@ def main():
         for kp in q["knowledge_points"]:
             kp_count[kp] += 1
             kp_questions.setdefault(kp, []).append(q["id"])
+        # 章节归属：主章节 + 该题所涉及知识点所属章节（跨章综合题在多个章节各计一次）
+        # 与前端 src/lib/quiz.ts 的 inChapter() 判定口径一致
+        chs = set()
         if q["chapter"]:
-            ch_count[q["chapter"]] += 1
+            chs.add(q["chapter"])
+        for kp in q["knowledge_points"]:
+            ch = kp_chapter.get(kp)
+            if ch:
+                chs.add(ch)
+        for ch in chs:
+            ch_count[ch] += 1
 
     tree = json.loads(json.dumps(tree_src, ensure_ascii=False))
     for ch in tree["chapters"]:

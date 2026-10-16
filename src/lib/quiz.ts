@@ -1,6 +1,15 @@
-import { questions } from './data'
+import { kpToChapter, questions } from './data'
 import type { ProgressMap, SessionState } from './storage'
 import type { Question } from './types'
+
+/**
+ * 章节归属判定：题目的主章节命中，或其任一知识点所属章节命中。
+ * 与 scripts/build_data.py 中章节题量的统计口径保持一致（跨章综合题会在多章计入）。
+ */
+export function inChapter(q: Question, chapter: string): boolean {
+  if (q.chapter === chapter) return true
+  return q.knowledge_points.some((k) => kpToChapter[k] === chapter)
+}
 
 /** 客观题判分：选择/多选/判断 */
 export function judgeObjective(q: Question, selected: string[] | boolean): boolean {
@@ -28,6 +37,12 @@ export function filterQuestions(
     }
     if (session.typeFilter.length && !session.typeFilter.includes(q.type)) return false
     if (
+      session.chapterFilter.length &&
+      !session.chapterFilter.some((ch) => inChapter(q, ch))
+    ) {
+      return false
+    }
+    if (
       session.kpFilter.length &&
       !q.knowledge_points.some((k) => session.kpFilter.includes(k))
     ) {
@@ -53,6 +68,8 @@ function seedOf(s: SessionState) {
     s.typeFilter.join('-') +
     '|' +
     s.kpFilter.join('-') +
+    '|' +
+    s.chapterFilter.join('-') +
     '|' + (s.wrongOnly ? 'w' : '') + (s.favoriteOnly ? 'f' : '')
   )
 }
@@ -97,6 +114,7 @@ export function modeLabel(session: SessionState): string {
   const parts: string[] = []
   if (session.yearFilter.length) parts.push(session.yearFilter.map((y) => `${y}年`).join('/'))
   if (session.typeFilter.length) parts.push(`${session.typeFilter.length}种题型`)
+  if (session.chapterFilter.length) parts.push(`${session.chapterFilter.length}个章节`)
   if (session.kpFilter.length) parts.push(`${session.kpFilter.length}个知识点`)
   if (!parts.length) return session.order === 'random' ? '随机练习' : '顺序练习'
   return parts.join(' · ')

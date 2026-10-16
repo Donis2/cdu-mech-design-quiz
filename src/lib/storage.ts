@@ -120,7 +120,15 @@ export interface SessionState {
   mode: string
   yearFilter: number[]
   typeFilter: string[]
+  /** 章节筛选（存章节名，如「第五章 轮系」）；点章节名即可看该章全部题目 */
+  chapterFilter: string[]
   kpFilter: string[]
+  /**
+   * 知识点/章节是否多选叠加。
+   * false（默认）= 单选：点新的会替换旧的，即「点知识点 1 只看 1，再点知识点 2 只看 2」。
+   * true（勾选「筛选」）= 多选叠加：点知识点 1 再点 2，两处题目一起显示。
+   */
+  multiSelect: boolean
   wrongOnly: boolean
   favoriteOnly: boolean
   order: 'order' | 'random'
@@ -135,7 +143,9 @@ export const defaultSession: SessionState = {
   mode: 'sequence',
   yearFilter: [],
   typeFilter: [],
+  chapterFilter: [],
   kpFilter: [],
+  multiSelect: false,
   wrongOnly: false,
   favoriteOnly: false,
   order: 'order',

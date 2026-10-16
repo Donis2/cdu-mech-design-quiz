@@ -33,6 +33,7 @@ export function Practice() {
     const year = params.get('year')
     const type = params.get('type')
     const kp = params.get('kp')
+    const chapter = params.get('chapter')
     const mode = params.get('mode')
     // 沿用当前的显示方式（单题 / 全显示），只替换筛选条件
     setSession((prev) => {
@@ -40,9 +41,11 @@ export function Practice() {
         ...defaultSession,
         view: prev.view,
         revealAll: prev.revealAll,
+        multiSelect: prev.multiSelect,
       }
       if (year) next.yearFilter = year.split(',').map(Number)
       if (type) next.typeFilter = type.split(',')
+      if (chapter) next.chapterFilter = chapter.split(',')
       if (kp) next.kpFilter = kp.split(',')
       if (mode === 'wrong') next.wrongOnly = true
       if (mode === 'favorite') next.favoriteOnly = true
@@ -135,9 +138,9 @@ export function Practice() {
             className="ml-auto flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:bg-accent lg:hidden"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" /> 筛选
-            {(session.yearFilter.length + session.typeFilter.length + session.kpFilter.length) > 0 && (
+            {(session.yearFilter.length + session.typeFilter.length + session.chapterFilter.length + session.kpFilter.length) > 0 && (
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
-                {session.yearFilter.length + session.typeFilter.length + session.kpFilter.length}
+                {session.yearFilter.length + session.typeFilter.length + session.chapterFilter.length + session.kpFilter.length}
               </span>
             )}
           </button>
@@ -167,7 +170,13 @@ export function Practice() {
             label="顺序练习"
             active={!session.order || (session.order === 'order' && !session.wrongOnly && !session.favoriteOnly)}
             onClick={() =>
-              patch({ ...defaultSession, order: 'order', index: 0, view: session.view })
+              patch({
+                ...defaultSession,
+                order: 'order',
+                index: 0,
+                view: session.view,
+                multiSelect: session.multiSelect,
+              })
             }
           />
           <Preset
@@ -267,7 +276,7 @@ export function Practice() {
                 session={session}
                 patch={patch}
                 progress={progress}
-                onReset={() => patch({ ...defaultSession, view: session.view })}
+                onReset={() => patch({ ...defaultSession, view: session.view, multiSelect: session.multiSelect })}
               />
             </div>
             <div className="border-t p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
@@ -286,7 +295,7 @@ export function Practice() {
             session={session}
             patch={patch}
             progress={progress}
-            onReset={() => patch({ ...defaultSession, view: session.view })}
+            onReset={() => patch({ ...defaultSession, view: session.view, multiSelect: session.multiSelect })}
           />
         </aside>
 
@@ -324,7 +333,7 @@ export function Practice() {
                 </div>
               </div>
             ) : (
-              <EmptyState session={session} onReset={() => patch({ ...defaultSession, view: session.view })} />
+              <EmptyState session={session} onReset={() => patch({ ...defaultSession, view: session.view, multiSelect: session.multiSelect })} />
             )
           ) : current ? (
             <>
@@ -362,7 +371,7 @@ export function Practice() {
               )}
             </>
           ) : (
-            <EmptyState session={session} onReset={() => patch({ ...defaultSession, view: session.view })} />
+            <EmptyState session={session} onReset={() => patch({ ...defaultSession, view: session.view, multiSelect: session.multiSelect })} />
           )}
         </section>
 

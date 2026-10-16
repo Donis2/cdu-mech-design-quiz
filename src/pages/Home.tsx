@@ -164,7 +164,13 @@ export function Home() {
               <Card key={ch.id}>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="text-sm font-semibold">{ch.name}</div>
+                    <Link
+                      to={`/practice?chapter=${encodeURIComponent(ch.name)}`}
+                      title={`进入本章刷题：${ch.name}（${ch.questionCount} 题）`}
+                      className="text-sm font-semibold transition-colors hover:text-primary"
+                    >
+                      {ch.name}
+                    </Link>
                     <Badge variant="purple">{ch.questionCount} 题</Badge>
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">

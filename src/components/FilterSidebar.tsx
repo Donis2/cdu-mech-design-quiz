@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { RotateCcw, Search, Filter } from 'lucide-react'
+import { RotateCcw, Search, Filter, ChevronDown } from 'lucide-react'
 import { knowledgeTree, questions } from '@/lib/data'
 import type { ProgressMap, SessionState } from '@/lib/storage'
 import { TYPE_ORDER, cn, typeLabel } from '@/lib/utils'
@@ -141,14 +141,46 @@ export function FilterSidebar({
       {/* 知识点 */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm">
-            知识点（按考纲章节）
-            {session.kpFilter.length > 0 && (
-              <span className="ml-2 text-xs font-normal text-primary">
-                已选 {session.kpFilter.length}
-              </span>
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-sm">
+              知识点（按考纲章节）
+              {(session.chapterFilter.length > 0 || session.kpFilter.length > 0) && (
+                <span className="ml-2 text-xs font-normal text-primary">
+                  已选 {session.chapterFilter.length + session.kpFilter.length}
+                </span>
+              )}
+            </CardTitle>
+            {/* 「筛选」：勾选=多选叠加；不勾=单选（点新的替换旧的） */}
+            <label
+              className="flex shrink-0 cursor-pointer select-none items-center gap-1 rounded-md border px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:font-medium has-[:checked]:text-primary"
+              title={
+                session.multiSelect
+                  ? '多选模式：可同时选中多个章节 / 知识点，题目叠加显示'
+                  : '单选模式：点新的章节 / 知识点会替换上一个'
+              }
+            >
+              <input
+                type="checkbox"
+                className="h-3 w-3 cursor-pointer accent-[hsl(var(--primary))]"
+                checked={session.multiSelect}
+                onChange={(e) => patch({ multiSelect: e.target.checked, index: 0 })}
+              />
+              筛选
+            </label>
+          </div>
+          <p className="text-[11px] leading-snug text-muted-foreground">
+            点<b className="font-medium text-foreground">章节名</b>=看本章全部题目；
+            再点<b className="font-medium text-foreground">知识点</b>=只看该知识点。
+            {session.multiSelect ? (
+              <>
+                已勾选「筛选」：可<b className="font-medium text-foreground">多选叠加</b>。
+              </>
+            ) : (
+              <>
+                默认<b className="font-medium text-foreground">单选</b>，再点会替换上一个；勾选「筛选」可多选。
+              </>
             )}
-          </CardTitle>
+          </p>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="relative">
@@ -161,8 +193,20 @@ export function FilterSidebar({
             />
           </div>
 
-          {session.kpFilter.length > 0 && (
+          {(session.chapterFilter.length > 0 || session.kpFilter.length > 0) && (
             <div className="flex flex-wrap gap-1">
+              {session.chapterFilter.map((ch) => (
+                <Badge
+                  key={ch}
+                  variant="purple"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    patch({ chapterFilter: session.chapterFilter.filter((x) => x !== ch), index: 0 })
+                  }
+                >
+                  {ch} ✕
+                </Badge>
+              ))}
               {session.kpFilter.map((k) => (
                 <Badge
                   key={k}
@@ -180,39 +224,103 @@ export function FilterSidebar({
 
           <div className="max-h-[380px] space-y-1 overflow-y-auto pr-1">
             {filteredChapters.map((ch) => {
+              const chSelected = session.chapterFilter.includes(ch.name)
               const open = openChapters.includes(ch.id) || !!kpQuery.trim()
               const selectedInCh = ch.points.filter((p) =>
                 session.kpFilter.includes(p.name),
               ).length
               return (
-                <div key={ch.id} className="rounded-md border">
-                  <button
-                    className="flex w-full items-center gap-2 px-2.5 py-2 text-left text-xs font-medium hover:bg-accent"
-                    onClick={() =>
-                      setOpenChapters((prev) =>
-                        prev.includes(ch.id)
-                          ? prev.filter((x) => x !== ch.id)
-                          : [...prev, ch.id],
-                      )
-                    }
-                  >
-                    <span className="flex-1">{ch.name}</span>
-                    {selectedInCh > 0 && <Badge variant="info">{selectedInCh}</Badge>}
-                    <Badge variant={ch.questionCount ? 'secondary' : 'outline'}>
-                      {ch.questionCount}
-                    </Badge>
-                  </button>
+                <div
+                  key={ch.id}
+                  className={cn(
+                    'rounded-md border',
+                    chSelected && 'border-primary/60 bg-primary/5',
+                  )}
+                >
+                  <div className="flex items-stretch">
+                    {/* 章节名：点击 = 筛选本章全部题目（同时展开知识点便于继续细化） */}
+                    <button
+                      className={cn(
+                        'flex flex-1 items-center gap-2 px-2.5 py-2 text-left text-xs font-medium hover:bg-accent',
+                        chSelected && 'text-primary',
+                      )}
+                      aria-pressed={chSelected}
+                      title={chSelected ? '取消本章筛选' : `显示「${ch.name}」全部 ${ch.questionCount} 题`}
+                      onClick={() => {
+                        // 单选（未勾「筛选」）：本章已在筛选里就取消（回到全部），否则只留本章
+                        const next = session.multiSelect
+                          ? toggle(session.chapterFilter, ch.name)
+                          : singlePick(session.chapterFilter, ch.name)
+                        patch({
+                          chapterFilter: next,
+                          // 单选下切章即「看本章全部」，清掉上一章残留的知识点避免空结果
+                          kpFilter: session.multiSelect ? session.kpFilter : [],
+                          index: 0,
+                        })
+                        setOpenChapters((prev) =>
+                          next.includes(ch.name)
+                            ? prev.includes(ch.id)
+                              ? prev
+                              : [...prev, ch.id]
+                            : prev,
+                        )
+                      }}
+                    >
+                      <span className="flex-1">{ch.name}</span>
+                      {selectedInCh > 0 && <Badge variant="info">{selectedInCh}</Badge>}
+                      <Badge variant={ch.questionCount ? 'secondary' : 'outline'}>
+                        {ch.questionCount}
+                      </Badge>
+                    </button>
+                    {/* 箭头：仅展开 / 收起知识点，不改变筛选 */}
+                    <button
+                      aria-label={`${open ? '收起' : '展开'}「${ch.name}」的知识点`}
+                      aria-expanded={open}
+                      className="shrink-0 border-l px-1.5 text-muted-foreground hover:bg-accent"
+                      onClick={() =>
+                        setOpenChapters((prev) =>
+                          prev.includes(ch.id)
+                            ? prev.filter((x) => x !== ch.id)
+                            : [...prev, ch.id],
+                        )
+                      }
+                    >
+                      <ChevronDown
+                        className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-180')}
+                      />
+                    </button>
+                  </div>
                   {open && ch.points.length > 0 && (
                     <div className="space-y-0.5 border-t px-1.5 py-1.5">
                       {ch.points.map((p) => (
                         <button
                           key={p.id}
-                          onClick={() =>
-                            patch({
-                              kpFilter: toggle(session.kpFilter, p.name),
-                              index: 0,
-                            })
-                          }
+                          onClick={() => {
+                            if (session.multiSelect) {
+                              // 多选：叠加 / 取消该知识点
+                              patch({
+                                kpFilter: toggle(session.kpFilter, p.name),
+                                index: 0,
+                              })
+                            } else if (
+                              session.kpFilter.length === 1 &&
+                              session.kpFilter[0] === p.name
+                            ) {
+                              // 单选下再点一次 = 取消该知识点，退回本章全部
+                              patch({
+                                kpFilter: [],
+                                chapterFilter: [ch.name],
+                                index: 0,
+                              })
+                            } else {
+                              // 单选：只看该知识点（替换上一个）
+                              patch({
+                                kpFilter: [p.name],
+                                chapterFilter: [],
+                                index: 0,
+                              })
+                            }
+                          }}
                           className={cn(
                             'flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs',
                             session.kpFilter.includes(p.name)
@@ -274,4 +382,9 @@ function Chip({
 
 function toggle<T>(arr: T[], v: T): T[] {
   return arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
+}
+
+/** 单选：点新的替换旧的；再点同一个（当前唯一选中）则取消 */
+function singlePick(arr: string[], v: string): string[] {
+  return arr.length === 1 && arr[0] === v ? [] : [v]
 }
